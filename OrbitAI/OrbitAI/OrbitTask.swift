@@ -9,6 +9,8 @@ import Foundation
 import SwiftData
 import SwiftUI
 
+let colors: [String] = ["FF0000", "0000FF", "800080"]
+
 @Model
 class OrbitTask {
     
@@ -24,10 +26,12 @@ class OrbitTask {
     var taskDescription: String
     var deadline: Date
     
-    init(layer: CGFloat, colorHex: String, title: String, taskDescription: String, deadline: Date) {
+    var state: Bool = false
+    
+    init(layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
         self.size = CGFloat.random(in: 20...40)
         self.layer = layer
-        self.colorHex = colorHex
+        self.colorHex = colors.randomElement() ?? "FFFFFF"
         self.isSun = (layer == 0) ? true : false
         self.ringRadius = CGFloat(37.5 + (Double(layer) / (2.0)) * 75.0)
         self.direction = Bool.random() ? 1 : -1
@@ -37,11 +41,11 @@ class OrbitTask {
         self.deadline = deadline
     }
     
-    init(image: String, layer: CGFloat, colorHex: String, title: String, taskDescription: String, deadline: Date) {
+    init(image: String, layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
         self.image = image
         self.size = CGFloat.random(in: 20...40)
         self.layer = layer
-        self.colorHex = colorHex
+        self.colorHex = "FFA500"
         self.isSun = (layer == 0) ? true : false
         self.ringRadius = CGFloat(37.5 + (Double(layer) / (2.0)) * 75.0)
         self.direction = Bool.random() ? 1 : -1

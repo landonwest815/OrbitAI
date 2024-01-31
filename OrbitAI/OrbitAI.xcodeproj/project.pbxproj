@@ -10,6 +10,7 @@
 		910DE9082B6AB04200DAAB39 /* TaskDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910DE9072B6AB04200DAAB39 /* TaskDetails.swift */; };
 		910DE90A2B6AB35600DAAB39 /* OrbitTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910DE9092B6AB35600DAAB39 /* OrbitTask.swift */; };
 		910DE90C2B6AB56800DAAB39 /* GalaxyData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910DE90B2B6AB56800DAAB39 /* GalaxyData.swift */; };
+		91611D8A2B6AEE3D0010AEAA /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91611D892B6AEE3D0010AEAA /* ColorExtension.swift */; };
 		917794312B69842C000119AD /* OrbitAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917794302B69842C000119AD /* OrbitAIApp.swift */; };
 		917794332B69842C000119AD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917794322B69842C000119AD /* ContentView.swift */; };
 		917794352B69842C000119AD /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917794342B69842C000119AD /* Item.swift */; };
@@ -22,6 +23,7 @@
 		910DE9072B6AB04200DAAB39 /* TaskDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetails.swift; sourceTree = "<group>"; };
 		910DE9092B6AB35600DAAB39 /* OrbitTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitTask.swift; sourceTree = "<group>"; };
 		910DE90B2B6AB56800DAAB39 /* GalaxyData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxyData.swift; sourceTree = "<group>"; };
+		91611D892B6AEE3D0010AEAA /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		9177942D2B69842C000119AD /* OrbitAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OrbitAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		917794302B69842C000119AD /* OrbitAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitAIApp.swift; sourceTree = "<group>"; };
 		917794322B69842C000119AD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +74,7 @@
 				910DE9072B6AB04200DAAB39 /* TaskDetails.swift */,
 				910DE9092B6AB35600DAAB39 /* OrbitTask.swift */,
 				910DE90B2B6AB56800DAAB39 /* GalaxyData.swift */,
+				91611D892B6AEE3D0010AEAA /* ColorExtension.swift */,
 			);
 			path = OrbitAI;
 			sourceTree = "<group>";
@@ -157,6 +160,7 @@
 				910DE90C2B6AB56800DAAB39 /* GalaxyData.swift in Sources */,
 				917794332B69842C000119AD /* ContentView.swift in Sources */,
 				917794352B69842C000119AD /* Item.swift in Sources */,
+				91611D8A2B6AEE3D0010AEAA /* ColorExtension.swift in Sources */,
 				917794312B69842C000119AD /* OrbitAIApp.swift in Sources */,
 				910DE90A2B6AB35600DAAB39 /* OrbitTask.swift in Sources */,
 				910DE9082B6AB04200DAAB39 /* TaskDetails.swift in Sources */,
