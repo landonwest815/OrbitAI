@@ -14,6 +14,10 @@ enum DragState {
 }
 
 struct ContentView: View {
+    
+    @Environment(\.modelContext) var context
+    @Query var orbitTasks: [OrbitTask]
+    
     @State private var angle: Angle = .zero
     @GestureState private var dragState = DragState.inactive
     private let circleRadius: CGFloat = 50
@@ -31,66 +35,96 @@ struct ContentView: View {
                 StarryBackgroundView()
                     .background(Color.black)
                 
+                HStack {
+                    Button { context.insert(OrbitTask(layer: CGFloat(orbitTasks.count) + 1.0, colorHex: "FFFFFF", title: "Test", taskDescription: "Testing", deadline: Date()))
+                    }
+                    label: {
+                        Image(systemName: "plus")
+                    }
+                    Spacer()
+                }
+                
                 VStack {
                     HStack {
                         ZStack {
                             
-                            Circle()
-                                .stroke(style: StrokeStyle(lineWidth: 1))
-                                .frame(width: 150, height: 150)
-                                .opacity(showDetails || showTextField ? 0.3 : 0.7)
+                            ForEach(orbitTasks, id: \.id) { task in
+                                
+                                ZStack {
+                                    if !task.isSun {
+                                        Circle()
+                                            .stroke(style: StrokeStyle(lineWidth: 1))
+                                            .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
+                                            .opacity(0.7)
+                                        
+                                    }
+                                    
+                                    Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex)
+                                }
+                            }
                             
-                            Circle()
-                                .stroke(style: StrokeStyle(lineWidth: 1))
-                                .frame(width: 225, height: 225)
-                                .opacity(0.7)
-                                .opacity(showTextField ? 0.3 : 1)
-                            
-                            Circle()
-                                .stroke(style: StrokeStyle(lineWidth: 1))
-                                .frame(width: 300, height: 300)
-                                .opacity(showDetails || showTextField ? 0.3 : 0.7)
+//                            Circle()
+//                                .stroke(style: StrokeStyle(lineWidth: 1))
+//                                .frame(width: 225, height: 225)
+//                                .opacity(0.7)
+//                                .opacity(showTextField ? 0.3 : 1)
+//                            
+//                            Circle()
+//                                .stroke(style: StrokeStyle(lineWidth: 1))
+//                                .frame(width: 300, height: 300)
+//                                .opacity(showDetails || showTextField ? 0.3 : 0.7)
 
                             ZStack {
                                 
-                                Planet(image: "sun.min.fill", size: 75, x: 0, y: 0, color: .orange)
+                                Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF")
                                     .onTapGesture {
                                         showTextField = true
                                         showDetails = false
                                     }
-                                    .symbolEffect(.scale.byLayer.up, isActive: showTextField)
-                                    .opacity(showDetails ? 0.3 : 1)
-
-                                
-                                ZStack {
-                                    Planet(size: 15, x: -100, y: -110, color: .red)
-                                        .opacity(showDetails || showTextField ? 0.3 : 1)
-                                    
-                                    
-                                    Planet(size: 25, x: 200, y: 100, color: .blue)
-                                        .onTapGesture {
-                                            showDetails.toggle()
-                                            if showDetails {        showTextField = false
-                                            }
-                                        }
-                                        .opacity(showTextField ? 0.3 : 1)
-                                    
-                                    Planet(size: 30, x: -80, y: 290, color: .purple)
-                                        .opacity(showDetails || showTextField ? 0.3 : 1)
-
-                                }
-                                .rotationEffect(angle)
+//                                    .symbolEffect(.scale.byLayer.up, isActive: showTextField)
+//                                    .opacity(showDetails ? 0.3 : 1)
+//
+//                                
+//                                ZStack {
+//                                    Planet(size: 15, layer: 1, color: "FFFFFF")
+//                                        .opacity(showDetails || showTextField ? 0.3 : 1)
+//                                    
+//                                    
+//                                    Planet(size: 25, layer: 2, color: "FFFFFF")
+//                                        .onTapGesture {
+//                                            showDetails.toggle()
+//                                            if showDetails {        showTextField = false
+//                                            }
+//                                        }
+//                                        .opacity(showTextField ? 0.3 : 1)
+//                                    
+//                                    Planet(size: 30, layer: 3, color: "FFFFFF")
+//                                        .opacity(showDetails || showTextField ? 0.3 : 1)
+//
+//                                }
                             }
-                            .symbolEffect(.bounce, value: showTextField)
-                            .symbolEffect(.bounce, value: showDetails)
+//                            .symbolEffect(.bounce, value: showTextField)
+//                            .symbolEffect(.bounce, value: showDetails)
                         }
                         if showDetails {
-                            Text("Statistics Homework")
-                                .font(.system(size: 30))
-                                .fontDesign(.monospaced)
-                                .fontWeight(.ultraLight)
-                                .padding(20)
-                                .frame(width: 500)
+                            VStack {
+                                Text("**Stats Homework**")
+                                    .font(.system(size: 30))
+                                    .fontDesign(.monospaced)
+                                    .fontWeight(.ultraLight)
+                                    .frame(width: 500)
+                                    .padding(.bottom, 10)
+                                    .shadow(color: .white, radius: 10, x: 0, y: 0)
+                                Text("Complete 9 problems on the following topics: \n \n   • **Bernoulli Trials** \n   • **Random Variables** \n   • **Independence** \n \n This is due by next **Tuesday**.")
+                                    .font(.system(size: 15))
+                                    .fontDesign(.monospaced)
+                                    .fontWeight(.ultraLight)
+                                    .multilineTextAlignment(.leading)
+                                    .frame(width: 500)
+                                    .padding(.leading, 20)
+                                    .shadow(color: .white, radius: 10, x: 0, y: 0)
+
+                            }
                         }
                     }
                     .animation(.easeInOut)
@@ -128,6 +162,13 @@ struct ContentView: View {
             .onTapGesture {
                 showTextField = false
             }
+            .onAppear() {
+                do {
+                    try context.delete(model: OrbitTask.self)
+                } catch {
+                    print("Failed to clear all Country and City data.")
+                }
+            }
         }
     
     struct StarView: View {
@@ -155,8 +196,6 @@ struct ContentView: View {
             }
         }
     }
-    
-    
 }
 
 #Preview {
