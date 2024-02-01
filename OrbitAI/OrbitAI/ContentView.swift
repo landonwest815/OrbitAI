@@ -24,6 +24,8 @@ struct ContentView: View {
     
     @State private var selectedLayer: CGFloat = -1.0
     
+    @FocusState private var textFieldFocused: Bool
+    
     var body: some View {
             
         GeometryReader { geometry in
@@ -114,11 +116,8 @@ struct ContentView: View {
                 }
                 .padding(.top, 150)
                 .padding(.bottom, 150)
-                
-                VStack {
                     
-                    Spacer()
-                    HStack {
+                HStack {
                         if selectedLayer == 0 {
                             ZStack {
                                 ZStack {
@@ -135,18 +134,29 @@ struct ContentView: View {
                                 TextField("What do you need to get done?", text: $field)
                                     .frame(width: 750, height: 150)
                                     .textFieldStyle(.plain)
+                                    .fontDesign(.monospaced)
                                     .foregroundStyle(.orange)
                                     .padding(.leading, 50)
+                                    .focused($textFieldFocused)
+                                    .onAppear() {
+                                        textFieldFocused = true
+                                    }
+                                    .submitLabel(.done)
+                                    .onSubmit {
+                                        field = ""
+                                    }
                             }
                         }
                     }
-                }
+                .padding(.top, 500)
+                
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.33)) {
                     selectedLayer = -1
+                    textFieldFocused = false
                 }
             }
             .onAppear() {
