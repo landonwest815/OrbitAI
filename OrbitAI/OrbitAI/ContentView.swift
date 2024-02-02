@@ -26,6 +26,8 @@ struct ContentView: View {
     
     @FocusState private var textFieldFocused: Bool
     
+    @State private var aiOn: Bool = false
+    
     var body: some View {
             
         GeometryReader { geometry in
@@ -57,14 +59,14 @@ struct ContentView: View {
                                                 .stroke(style: StrokeStyle(lineWidth: 1))
                                                 .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
                                                 .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 0.7 : 0.2 )
-                                                .animation(.easeInOut(duration: 0.5), value: selectedLayer)
+                                                .animation(.easeInOut(duration: 0.25), value: selectedLayer)
 
-                                            
+
                                         }
                                         
                                         Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
                                             .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
-                                            .animation(.easeInOut(duration: 0.5), value: selectedLayer)
+                                            .animation(.easeInOut(duration: 0.25), value: selectedLayer)
 
                                     }
                                 
@@ -76,7 +78,7 @@ struct ContentView: View {
                                 
                                 Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
                                     .opacity(selectedLayer < 1 ? 1.0 : 0.2 )
-                                    .animation(.easeInOut(duration: 0.5), value: selectedLayer)
+                                    .animation(.easeInOut(duration: 0.25), value: selectedLayer)
 
                                 
                                 
@@ -117,7 +119,24 @@ struct ContentView: View {
                 .padding(.top, 150)
                 .padding(.bottom, 150)
                     
-                HStack {
+                VStack {
+                    
+                    HStack {
+                        Spacer()
+                        Image(systemName: "sparkles")
+                            .resizable()
+                            .frame(width: 35, height: 35)
+                            .foregroundStyle(.orange)
+                        Toggle("", isOn: $aiOn)
+                            .toggleStyle(SwitchToggleStyle(tint: .white))
+                            .padding(.trailing, 20)
+                            .disabled(selectedLayer > -1)
+                    }
+                    .padding(30)
+                    .opacity(selectedLayer < 0 ? 1.0 : 0.2 )
+                    
+                    Spacer()
+                    HStack {
                         if selectedLayer == 0 {
                             ZStack {
                                 ZStack {
@@ -148,13 +167,14 @@ struct ContentView: View {
                             }
                         }
                     }
-                .padding(.top, 500)
+                    .padding(20)
+                }
                 
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             
             .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.33)) {
+                withAnimation(.easeInOut(duration: 0.25)) {
                     selectedLayer = -1
                     textFieldFocused = false
                 }
