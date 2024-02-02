@@ -10,9 +10,7 @@ import SwiftData
 
 @Model
 class GalaxyData {
-    
-    var rings = -1
-    
+        
     init() {
     }
     

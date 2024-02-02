@@ -9,19 +9,17 @@ import SwiftUI
 
 struct Planet: View {
    
-    var image: String = ""
-    var size: CGFloat?
-    var layer: CGFloat
-    var color: Color
-    var isSun: Bool = false
-    var ringRadius: CGFloat
-    var direction: CGFloat
-    var active: Bool = false
+    var image: String = ""  // Optional Planet Image; Random Color Circle otherwise
+    var size: CGFloat?      // Optional Planet Size; Random Size from 20-40 otherwise
+    var layer: CGFloat      // Grows outwards from Sun at 0
+    var color: Color        // Tranformed from Hex to Color in initialization
+    var isSun: Bool = false     // Set during intialization
+    var ringRadius: CGFloat     // Decided based on math with layer
+    var direction: CGFloat      // Randomly decided with a boolean value (counter-clockwise OR clockwise)
+    @Binding var selection: CGFloat     // Sets the selected planet for Task Detail Expansion
+    @State private var angle = 0.0      // Allows planets to continuously orbit Sun
     
-    @Binding var selection: CGFloat
-    
-    @State private var angle = 0.0
-    
+    // MARK: Random Planets as colored circles with random sizes and directions
     init(size: CGFloat, layer: CGFloat, color: String, selection: Binding<CGFloat>) {
         self.size = size
         self.layer = layer
@@ -32,6 +30,7 @@ struct Planet: View {
         self._selection = selection
     }
     
+    // MARK: Specific to the Sun
     init(image: String, size: CGFloat, layer: CGFloat, color: String, selection: Binding<CGFloat>) {
         self.image = image
         self.size = size
@@ -45,29 +44,20 @@ struct Planet: View {
     
     var body: some View {
         ZStack {
+            
+            // MARK: Sun View
             if isSun {
                 Image(systemName: image)
                     .resizable()
-                    .frame(width: size, height: size)
-                    .foregroundStyle(color)
-                    .shadow(color: color, radius: 5, x: 0, y: 0)
-                    .symbolEffect(.scale.byLayer.up, isActive: active)
-                    .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            selection = self.layer
-                        }
-                    }
             }
-            else
-            {
+            
+            // MARK: Planet View
+            else {
                 Image(systemName: "circle.fill")
                     .resizable()
                     .offset(x: ringRadius * cos(CGFloat(angle)), y: ringRadius * sin(CGFloat(angle)))
-                    .frame(width: size, height: size)
-                    .foregroundStyle(color)
-                    .shadow(color: color, radius: 5, x: 0, y: 0)
+                    .symbolEffect(.bounce, value: selection == self.layer)
                     .onAppear {
-                        // Timer to update the angle
                         Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
                             self.angle += (self.direction == 1) ? (0.002 / layer) : (-0.002 / layer)
                             if self.angle > 2 * .pi {
@@ -75,17 +65,16 @@ struct Planet: View {
                             }
                         }
                     }
-                    .onTapGesture {
-                        withAnimation(.easeInOut) {
-                            selection = self.layer
-                        }
-                    }
-                    .symbolEffect(.bounce, value: selection == self.layer)
-
-                
             }
         }
-
+        .frame(width: size, height: size)
+        .foregroundStyle(color)
+        .shadow(color: color, radius: 5, x: 0, y: 0)
+        .onTapGesture {
+            withAnimation(.easeInOut) {
+                selection = self.layer
+            }
+        }
     }
 }
 

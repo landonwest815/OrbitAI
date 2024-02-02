@@ -9,9 +9,9 @@ import SwiftUI
 
 struct TaskDetails: View {
     
-    var title: String
-    var description: String
-    var deadline: Date
+    var title: String           // Title to display
+    var description: String     // Description to display
+    var deadline: Date          // Deadline to display
     
     init(title: String, description: String, deadline: Date) {
         self.title = title
@@ -21,23 +21,21 @@ struct TaskDetails: View {
     
     var body: some View {
         VStack {
+            // MARK: Title
             Text("**\(title)**")
                 .font(.system(size: 30))
-                .fontDesign(.monospaced)
-                .fontWeight(.ultraLight)
-                .frame(width: 500)
                 .padding(.bottom, 10)
-                .shadow(color: .white, radius: 10, x: 0, y: 0)
+            
+            // MARK: Description + Deadline
             Text("\(description) \n \n This is due by **\(deadline.formatted())**.")
                 .font(.system(size: 15))
-                .fontDesign(.monospaced)
-                .fontWeight(.ultraLight)
-                .multilineTextAlignment(.leading)
-                .frame(width: 500)
                 .padding(.leading, 20)
-                .shadow(color: .white, radius: 10, x: 0, y: 0)
-
         }
+        .fontDesign(.monospaced)
+        .fontWeight(.ultraLight)
+        .multilineTextAlignment(.leading)
+        .frame(width: 500)
+        .shadow(color: .white, radius: 10, x: 0, y: 0)
     }
 }
 

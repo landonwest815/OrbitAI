@@ -9,25 +9,25 @@ import Foundation
 import SwiftData
 import SwiftUI
 
+// Pre-Determined Set of Colors for added Planets
 let colors: [String] = ["FF0000", "0000FF", "800080"]
 
 @Model
 class OrbitTask {
     
-    var image: String = ""
-    var size: CGFloat?
-    var layer: CGFloat
-    var colorHex: String
-    var isSun: Bool
-    var ringRadius: CGFloat
-    var direction: CGFloat
+    var image: String = ""  // Optional Image; Colored Circle otherwise
+    var size: CGFloat?      // Optional Size; Random between 20-40 otherwise
+    var layer: CGFloat      // Grows outward from 0 (Sun Layer)
+    var colorHex: String    // Hexadecimal representation of color selected randomly from the colors array
+    var isSun: Bool         // Determined upon intialization
+    var ringRadius: CGFloat     // Determined based on math with Layer value
+    var direction: CGFloat      // Randomly chosen between counter-clockwise and clockwise
     
-    var title: String
-    var taskDescription: String
-    var deadline: Date
+    var title: String               // Title of the Task
+    var taskDescription: String     // Description of the Task
+    var deadline: Date              // Deadline fo the Task
     
-    var state: Bool = false
-    
+    // MARK: Randomly Created Task Planet
     init(layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
         self.size = CGFloat.random(in: 20...40)
         self.layer = layer
@@ -41,6 +41,7 @@ class OrbitTask {
         self.deadline = deadline
     }
     
+    // MARK: More Specific Task Planet
     init(image: String, layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
         self.image = image
         self.size = CGFloat.random(in: 20...40)

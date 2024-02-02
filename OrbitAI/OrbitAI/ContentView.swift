@@ -8,25 +8,15 @@
 import SwiftUI
 import SwiftData
 
-enum DragState {
-    case inactive
-    case dragging(translation: CGSize)
-}
-
 struct ContentView: View {
     
-    @Environment(\.modelContext) var context
-    @Query var orbitTasks: [OrbitTask]
-        
-    @State private var field: String = ""
-    
-    @State private var showDetails: Bool = false
-    
-    @State private var selectedLayer: CGFloat = -1.0
-    
-    @FocusState private var textFieldFocused: Bool
-    
-    @State private var aiOn: Bool = false
+    @Environment(\.modelContext) var context    // Data
+    @Query var orbitTasks: [OrbitTask]      // Current Tasks
+    @State private var field: String = ""   // Prompt TextField
+    @State private var showDetails: Bool = false    // Shows Task Details when planet is clicked
+    @State private var selectedLayer: CGFloat = -1.0    // Non-Selection: -1, Sun: 0, Tasks: 1+
+    @FocusState private var textFieldFocused: Bool  // Focuses TextField when Sun is clicked
+    @State private var aiOn: Bool = false   // Controls help of AI
     
     var body: some View {
             
@@ -34,64 +24,51 @@ struct ContentView: View {
             
             ZStack {
                 
-                StarryBackgroundView()
-                    .background(Color.black)
+                // MARK: Starry Sky
+                    StarryBackgroundView()
                 
-                HStack {
-                    Button { context.insert(OrbitTask(layer: CGFloat(orbitTasks.count) + 1.0, title: "Task #\(orbitTasks.count + 1)", taskDescription: "Description #\(orbitTasks.count + 1)", deadline: Date()))
-                    }
-                label: {
-                    Image(systemName: "plus")
-                }
-                    Spacer()
-                }
-                
+                // MARK: Sun + Planets + Task Details
                 VStack {
                     HStack {
+                        
+                        // MARK: Sun + Planets
                         ZStack {
-                            
+                                
+                            // MARK: Planets + Orbit Paths
                             ForEach(orbitTasks, id: \.id) { task in
                                 
-                                
-                                    ZStack {
-                                        if !task.isSun {
-                                            Circle()
-                                                .stroke(style: StrokeStyle(lineWidth: 1))
-                                                .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
-                                                .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 0.7 : 0.2 )
-                                                .animation(.easeInOut(duration: 0.25), value: selectedLayer)
-
-
-                                        }
-                                        
-                                        Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
-                                            .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
+                                ZStack {
+                                    // MARK: Orbit Paths
+                                    if !task.isSun {
+                                        Circle()
+                                            .stroke(style: StrokeStyle(lineWidth: 1))
+                                            .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
+                                            .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 0.7 : 0.2 )
                                             .animation(.easeInOut(duration: 0.25), value: selectedLayer)
-
                                     }
-                                
-                                
+                                    
+                                    // MARK: Planets
+                                    Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
+                                        .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
+                                        .animation(.easeInOut(duration: 0.25), value: selectedLayer)
+                                }
                             }
                             
-                            
-                            ZStack {
-                                
-                                Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
-                                    .opacity(selectedLayer < 1 ? 1.0 : 0.2 )
-                                    .animation(.easeInOut(duration: 0.25), value: selectedLayer)
-
-                                
-                                
-                                
-                            }
-                            .symbolEffect(.scale.byLayer.up, isActive: selectedLayer == 0)
+                            // MARK: Sun
+                            Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
+                                .opacity(selectedLayer < 1 ? 1.0 : 0.2 )
+                                .animation(.easeInOut(duration: 0.25), value: selectedLayer)
+                                .symbolEffect(.scale.byLayer.up, isActive: selectedLayer == 0)
                         }
+                        
+                        // MARK: Expanded Task Details
                         if selectedLayer > 0 {
                             VStack {
+                                
+                                // Grab the Task Data
                                 if let selected = orbitTasks.first(where: { $0.layer == selectedLayer }) {
-                                    // Use taskWithLayer3 here
-                                    // This is your OrbitTask where the layer value is 3
                                     
+                                    // Display the Title
                                     Text("**\(selected.title)**")
                                         .font(.system(size: 30))
                                         .fontDesign(.monospaced)
@@ -99,7 +76,9 @@ struct ContentView: View {
                                         .frame(width: 500)
                                         .padding(.bottom, 10)
                                         .shadow(color: .white, radius: 10, x: 0, y: 0)
-                                    Text("\(selected.taskDescription) \n \n \(selected.deadline)")
+                                    
+                                    // Display the Information
+                                    Text("\(selected.taskDescription)\n\n\(selected.deadline)")
                                         .font(.system(size: 15))
                                         .fontDesign(.monospaced)
                                         .fontWeight(.ultraLight)
@@ -107,9 +86,9 @@ struct ContentView: View {
                                         .frame(width: 500)
                                         .padding(.leading, 20)
                                         .shadow(color: .white, radius: 10, x: 0, y: 0)
+                                    
                                 } else {
-                                    // Handle the case where no task has a layer value of 3
-                                    Text("Error")
+                                    Text("Error pulling the Task Data")
                                 }
                             }
                             .transition(.opacity)
@@ -119,10 +98,25 @@ struct ContentView: View {
                 .padding(.top, 150)
                 .padding(.bottom, 150)
                     
+                
+                // MARK: Settings + Prompt
                 VStack {
                     
+                    // MARK: Settings
                     HStack {
                         Spacer()
+                        
+                        // MARK: Add Planet Manually
+                            HStack {
+                                Button { context.insert(OrbitTask(layer: CGFloat(orbitTasks.count) + 1.0, title: "Task #\(orbitTasks.count + 1)", taskDescription: "Description #\(orbitTasks.count + 1)", deadline: Date()))
+                                }
+                                label: {
+                                    Image(systemName: "plus")
+                                }
+                                .padding(20)
+                            }
+                        
+                        // MARK: Toggle AI Features
                         Image(systemName: "sparkles")
                             .resizable()
                             .frame(width: 35, height: 35)
@@ -136,9 +130,13 @@ struct ContentView: View {
                     .opacity(selectedLayer < 0 ? 1.0 : 0.2 )
                     
                     Spacer()
+                    
+                    // MARK: Prompt
                     HStack {
                         if selectedLayer == 0 {
                             ZStack {
+                                
+                                // Prompt Border
                                 ZStack {
                                     RoundedRectangle(cornerRadius: 10) // Set the corner radius
                                         .stroke(lineWidth: 1) // Set the line width for the stroke
@@ -150,6 +148,7 @@ struct ContentView: View {
                                         .padding(.trailing, 200)
                                 }
                                 
+                                // Prompt TextField
                                 TextField("What do you need to get done?", text: $field)
                                     .frame(width: 750, height: 150)
                                     .textFieldStyle(.plain)
@@ -169,10 +168,8 @@ struct ContentView: View {
                     }
                     .padding(20)
                 }
-                
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
-            
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.25)) {
                     selectedLayer = -1
@@ -183,12 +180,13 @@ struct ContentView: View {
                 do {
                     try context.delete(model: OrbitTask.self)
                 } catch {
-                    print("Failed to clear all Country and City data.")
+                    print("Failed to clear all Task Data.")
                 }
             }
         }
     }
     
+    // MARK: Stars
     struct StarView: View {
         var body: some View {
             Circle()
@@ -198,6 +196,7 @@ struct ContentView: View {
         }
     }
 
+    // MARK: Stars Background
     struct StarryBackgroundView: View {
         let numberOfStars: Int = 100 // Adjust the number of stars to your liking
 
@@ -212,6 +211,7 @@ struct ContentView: View {
                         .opacity(Double.random(in: 0.3...1)) // Random opacity for a twinkling effect
                 }
             }
+            .background(.black)
         }
     }
 }
