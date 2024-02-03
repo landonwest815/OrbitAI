@@ -15,6 +15,7 @@ struct ContentView: View {
     @State private var field: String = ""   // Prompt TextField
     @State private var showDetails: Bool = false    // Shows Task Details when planet is clicked
     @State private var selectedLayer: CGFloat = -1.0    // Non-Selection: -1, Sun: 0, Tasks: 1+
+    @State var selectedTask: OrbitTask?
     @FocusState private var textFieldFocused: Bool  // Focuses TextField when Sun is clicked
     @State private var aiOn: Bool = false   // Controls help of AI
     
@@ -24,6 +25,10 @@ struct ContentView: View {
     @State private var newTaskTitle: String = ""
     @State private var newTaskDescription: String = ""
     @State private var newTaskDeadline: String = ""
+    
+    @State private var detailsTitle: String = ""
+    @State private var detailsDescription: String = ""
+
     
     var body: some View {
             
@@ -51,54 +56,98 @@ struct ContentView: View {
                                             .stroke(style: StrokeStyle(lineWidth: 1))
                                             .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
                                             .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 0.7 : 0.2 )
-                                            .animation(.easeInOut(duration: 0.25), value: selectedLayer)
+                                            .animation(.easeInOut(duration: 0.33), value: selectedLayer)
                                     }
                                     
                                     // MARK: Planets
                                     Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
                                         .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
-                                        .animation(.easeInOut(duration: 0.25), value: selectedLayer)
+                                        .animation(.easeInOut(duration: 0.33), value: selectedLayer)
                                 }
                             }
                             
                             // MARK: Sun
                             Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
                                 .opacity(selectedLayer < 1 ? 1.0 : 0.2 )
-                                .animation(.easeInOut(duration: 0.25), value: selectedLayer)
+                                .animation(.easeInOut(duration: 0.33), value: selectedLayer)
                                 .symbolEffect(.scale.byLayer.up, isActive: selectedLayer == 0)
                         }
                         
                         // MARK: Expanded Task Details
                         if selectedLayer > 0 {
-                            VStack {
+                            ZStack {
                                 
                                 // Grab the Task Data
-                                if let selected = orbitTasks.first(where: { $0.layer == selectedLayer }) {
+                                if selectedTask != nil {
                                     
-                                    // Display the Title
-                                    Text("**\(selected.title)**")
-                                        .font(.system(size: 30))
-                                        .fontDesign(.monospaced)
-                                        .fontWeight(.ultraLight)
-                                        .frame(width: 500)
-                                        .padding(.bottom, 10)
-                                        .shadow(color: .white, radius: 10, x: 0, y: 0)
-                                    
-                                    // Display the Information
-                                    Text("\(selected.taskDescription)\n\n\(selected.deadline)")
-                                        .font(.system(size: 15))
-                                        .fontDesign(.monospaced)
-                                        .fontWeight(.ultraLight)
-                                        .multilineTextAlignment(.leading)
-                                        .frame(width: 500)
-                                        .padding(.leading, 20)
-                                        .shadow(color: .white, radius: 10, x: 0, y: 0)
-                                    
+                                    VStack {
+                                        // Display the Title
+                                        TextField("", text: $detailsTitle)
+                                            .focused($textFieldFocused)
+                                            .font(.system(size: 30))
+                                            .fontWeight(.bold)
+                                            .textFieldStyle(.plain)
+                                            .submitLabel(.done)
+                                            .fontDesign(.monospaced)
+                                            .fontWeight(.ultraLight)
+                                            .frame(width: 500)
+                                            .padding(.leading, 75)
+                                            .padding(.bottom, 25)
+                                            .shadow(color: .white, radius: 10, x: 0, y: 0)
+                                            .onChange(of: detailsTitle) { newValue in
+                                                if textFieldFocused {
+                                                    selectedTask?.title = newValue
+                                                }
+                                            }
+                                            .onSubmit {
+                                                textFieldFocused = false
+                                            }
+                                        
+                                        // Display the Information
+                                        TextEditor(text: $detailsDescription)
+                                            .focused($textFieldFocused)
+                                            .font(.system(size: 15))
+                                            .fontWeight(.bold)
+                                            .scrollContentBackground(.hidden)
+                                            .scrollClipDisabled(true)
+                                            .scrollIndicators(.never)
+                                            .submitLabel(.done)
+                                            .fontDesign(.monospaced)
+                                            .fontWeight(.ultraLight)
+                                            .multilineTextAlignment(.leading)
+                                            .frame(width: 500, height: 250)
+                                            .clipShape(Rectangle())
+                                            .shadow(color: .white, radius: 10, x: 0, y: 0)
+                                            .onChange(of: detailsDescription) { newValue in
+                                                if textFieldFocused {
+                                                    selectedTask?.taskDescription = newValue
+                                                }
+                                            }
+                                            .onSubmit {
+                                                textFieldFocused = false
+                                            }
+                                        
+                                        Button {
+                                            if let taskToDelete = selectedTask {
+                                                context.delete(taskToDelete)
+                                            }
+                                            selectedLayer = -1
+                                        }
+                                        label: {
+                                            Text("Delete")
+                                                .foregroundStyle(.red)
+                                        }
+                                    }
+                                    .onAppear {
+                                        detailsTitle = selectedTask?.title ?? ""
+                                        detailsDescription = selectedTask?.taskDescription ?? ""
+                                    }
                                 } else {
                                     Text("Error pulling the Task Data")
                                 }
                             }
-                            .padding(20)
+                            .frame(width: 500)
+                            .padding(30)
                             .transition(.opacity)
                         }
                     }
@@ -201,7 +250,7 @@ struct ContentView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .onTapGesture {
-                withAnimation(.easeInOut(duration: 0.25)) {
+                withAnimation(.easeInOut(duration: 0.33)) {
                     selectedLayer = -1
                     textFieldFocused = false
                 }
@@ -211,6 +260,17 @@ struct ContentView: View {
                     try context.delete(model: OrbitTask.self)
                 } catch {
                     print("Failed to clear all Task Data.")
+                }
+            }
+            .onChange(of: selectedLayer) {
+                if selectedLayer > 0 {
+                    selectedTask = orbitTasks.first(where: { $0.layer == selectedLayer })
+                    detailsTitle = selectedTask?.title ?? ""
+                    detailsDescription = selectedTask?.taskDescription ?? ""
+                    textFieldFocused = false
+                }
+                else {
+                    selectedTask = nil
                 }
             }
         }
