@@ -107,7 +107,6 @@ struct ContentView: View {
                                         TextEditor(text: $detailsDescription)
                                             .focused($textFieldFocused)
                                             .font(.system(size: 15))
-                                            .fontWeight(.bold)
                                             .scrollContentBackground(.hidden)
                                             .scrollClipDisabled(true)
                                             .scrollIndicators(.never)
@@ -252,14 +251,8 @@ struct ContentView: View {
             .onTapGesture {
                 withAnimation(.easeInOut(duration: 0.33)) {
                     selectedLayer = -1
+                    promptStep = 0
                     textFieldFocused = false
-                }
-            }
-            .onAppear() {
-                do {
-                    try context.delete(model: OrbitTask.self)
-                } catch {
-                    print("Failed to clear all Task Data.")
                 }
             }
             .onChange(of: selectedLayer) {
@@ -278,10 +271,10 @@ struct ContentView: View {
     
     func completeTaskSetup() {
         
-        var newTask = OrbitTask(layer: CGFloat(orbitTasks.count) + 1, title: newTaskTitle, taskDescription: newTaskDescription, deadline: Date().advanced(by: 1000000))
+        let newTask = OrbitTask(layer: CGFloat(orbitTasks.count) + 1, title: newTaskTitle, taskDescription: newTaskDescription, deadline: Date().advanced(by: 1000000))
         context.insert(newTask)
         
-        selectedLayer = CGFloat(orbitTasks.count + 1)
+        selectedLayer = -1
         promptStep = 0
     }
     
