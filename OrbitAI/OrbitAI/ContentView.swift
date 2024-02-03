@@ -18,6 +18,13 @@ struct ContentView: View {
     @FocusState private var textFieldFocused: Bool  // Focuses TextField when Sun is clicked
     @State private var aiOn: Bool = false   // Controls help of AI
     
+    @State private var promptInstructions = ["1. task name", "2. task details + description", "3. task deadline"]
+    @State private var promptPlaceholders = ["What do you want to name your task?", "Give a summary of what the task consists of.", "When must this task be completed?"]
+    @State private var promptStep: Int = 0
+    @State private var newTaskTitle: String = ""
+    @State private var newTaskDescription: String = ""
+    @State private var newTaskDeadline: String = ""
+    
     var body: some View {
             
         GeometryReader { geometry in
@@ -25,7 +32,7 @@ struct ContentView: View {
             ZStack {
                 
                 // MARK: Starry Sky
-                    StarryBackgroundView()
+                StarryBackgroundView()
                 
                 // MARK: Sun + Planets + Task Details
                 VStack {
@@ -33,7 +40,7 @@ struct ContentView: View {
                         
                         // MARK: Sun + Planets
                         ZStack {
-                                
+                            
                             // MARK: Planets + Orbit Paths
                             ForEach(orbitTasks, id: \.id) { task in
                                 
@@ -91,13 +98,14 @@ struct ContentView: View {
                                     Text("Error pulling the Task Data")
                                 }
                             }
+                            .padding(20)
                             .transition(.opacity)
                         }
                     }
                 }
                 .padding(.top, 150)
                 .padding(.bottom, 150)
-                    
+                
                 
                 // MARK: Settings + Prompt
                 VStack {
@@ -107,14 +115,14 @@ struct ContentView: View {
                         Spacer()
                         
                         // MARK: Add Planet Manually
-                            HStack {
-                                Button { context.insert(OrbitTask(layer: CGFloat(orbitTasks.count) + 1.0, title: "Task #\(orbitTasks.count + 1)", taskDescription: "Description #\(orbitTasks.count + 1)", deadline: Date()))
-                                }
-                                label: {
-                                    Image(systemName: "plus")
-                                }
-                                .padding(20)
+                        HStack {
+                            Button { context.insert(OrbitTask(layer: CGFloat(orbitTasks.count) + 1.0, title: "Task #\(orbitTasks.count + 1)", taskDescription: "Description #\(orbitTasks.count + 1)", deadline: Date()))
                             }
+                        label: {
+                            Image(systemName: "plus")
+                        }
+                        .padding(20)
+                        }
                         
                         // MARK: Toggle AI Features
                         Image(systemName: "sparkles")
@@ -136,38 +144,60 @@ struct ContentView: View {
                         if selectedLayer == 0 {
                             ZStack {
                                 
-                                // Prompt Border
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 10) // Set the corner radius
-                                        .stroke(lineWidth: 1) // Set the line width for the stroke
-                                        .frame(width: 750, height: 50)
+                                VStack {
+                                    Text(promptInstructions[promptStep]).fontDesign(.monospaced)
                                         .foregroundStyle(.orange)
-                                        .padding(25)
-                                        .opacity(0.7)
-                                        .padding(.leading, 200)
-                                        .padding(.trailing, 200)
+                                        .font(.system(size: 25))
+                                        
+                                    
+                                    // Prompt Border
+                                    ZStack {
+                                        RoundedRectangle(cornerRadius: 10) // Set the corner radius
+                                            .stroke(lineWidth: 1) // Set the line width for the stroke
+                                            .frame(width: 750, height: 50)
+                                            .foregroundStyle(.orange)
+                                            .padding(25)
+                                            .opacity(0.7)
+                                            .padding(.leading, 200)
+                                            .padding(.trailing, 200)
+                                        
+                                        // Prompt TextField
+                                        TextField(promptPlaceholders[promptStep], text: $field)
+                                            .frame(width: 700, height: 150)
+                                            .textFieldStyle(.plain)
+                                            .fontDesign(.monospaced)
+                                            .foregroundStyle(.orange)
+                                            .focused($textFieldFocused)
+                                            .onAppear() {
+                                                textFieldFocused = true
+                                            }
+                                            .submitLabel(.done)
+                                            .onSubmit {
+                                                if promptStep == 0 {
+                                                    newTaskTitle = field
+                                                }
+                                                else if promptStep == 1 {
+                                                    newTaskDescription = field
+                                                }
+                                                else if promptStep == 2 {
+                                                    newTaskDeadline = field
+                                                }
+                                                
+                                                field = ""
+                                                
+                                                if promptStep == 2 {
+                                                    completeTaskSetup()
+                                                } else {
+                                                    promptStep += 1
+                                                }
+                                            }
+                                    }
                                 }
-                                
-                                // Prompt TextField
-                                TextField("What do you need to get done?", text: $field)
-                                    .frame(width: 750, height: 150)
-                                    .textFieldStyle(.plain)
-                                    .fontDesign(.monospaced)
-                                    .foregroundStyle(.orange)
-                                    .padding(.leading, 50)
-                                    .focused($textFieldFocused)
-                                    .onAppear() {
-                                        textFieldFocused = true
-                                    }
-                                    .submitLabel(.done)
-                                    .onSubmit {
-                                        field = ""
-                                    }
                             }
                         }
                     }
-                    .padding(20)
                 }
+                .padding(20)
             }
             .frame(width: geometry.size.width, height: geometry.size.height)
             .onTapGesture {
@@ -184,6 +214,15 @@ struct ContentView: View {
                 }
             }
         }
+    }
+    
+    func completeTaskSetup() {
+        
+        var newTask = OrbitTask(layer: CGFloat(orbitTasks.count) + 1, title: newTaskTitle, taskDescription: newTaskDescription, deadline: Date().advanced(by: 1000000))
+        context.insert(newTask)
+        
+        selectedLayer = CGFloat(orbitTasks.count + 1)
+        promptStep = 0
     }
     
     // MARK: Stars
