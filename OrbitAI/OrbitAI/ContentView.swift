@@ -60,9 +60,10 @@ struct ContentView: View {
                                     }
                                     
                                     // MARK: Planets
-                                    Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
-                                        .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
-                                        .animation(.easeInOut(duration: 0.33), value: selectedLayer)
+                                        Planet(size: CGFloat(task.size ?? 20), layer: task.layer, color: task.colorHex, selection: $selectedLayer)
+                                            .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 1.0 : 0.2)
+                                            .animation(.easeInOut(duration: 0.33), value: selectedLayer)
+                                    
                                 }
                             }
                             
@@ -114,7 +115,7 @@ struct ContentView: View {
                                             .fontDesign(.monospaced)
                                             .fontWeight(.ultraLight)
                                             .multilineTextAlignment(.leading)
-                                            .frame(width: 500, height: 250)
+                                            .frame(maxHeight: 100)
                                             .clipShape(Rectangle())
                                             .shadow(color: .white, radius: 10, x: 0, y: 0)
                                             .onChange(of: detailsDescription) { newValue in
@@ -146,7 +147,7 @@ struct ContentView: View {
                                 }
                             }
                             .frame(width: 500)
-                            .padding(30)
+                            .padding(.leading, 50)
                             .transition(.opacity)
                         }
                     }
