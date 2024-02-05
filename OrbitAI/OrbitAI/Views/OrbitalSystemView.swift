@@ -33,17 +33,21 @@ struct OrbitalSystemView: View {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
     let container = try! ModelContainer(for: PlanetaryBody.self, OrbitalPath.self, OrbitalSystem.self, configurations: config)
     
-    let planetaryBody = PlanetaryBody()
-    container.mainContext.insert(planetaryBody)
+    let planetaryBody1 = PlanetaryBody()
+    container.mainContext.insert(planetaryBody1)
+    let planetaryBody2 = PlanetaryBody()
+    container.mainContext.insert(planetaryBody2)
+    let planetaryBody3 = PlanetaryBody(color: "FFA500")
+    container.mainContext.insert(planetaryBody3)
     
-    let orbitalPath1 = OrbitalPath(planetaryBody: planetaryBody, layer: 1)
-    let orbitalPath2 = OrbitalPath(planetaryBody: planetaryBody, layer: 2)
+    let orbitalPath1 = OrbitalPath(planetaryBody: planetaryBody1, layer: 1)
+    let orbitalPath2 = OrbitalPath(planetaryBody: planetaryBody2, layer: 2)
     container.mainContext.insert(orbitalPath1)
     container.mainContext.insert(orbitalPath2)
 
     let orbitalPaths = [orbitalPath1, orbitalPath2]
 
-    let orbitalSystem = OrbitalSystem(center: planetaryBody, orbitalPaths: orbitalPaths)
+    let orbitalSystem = OrbitalSystem(center: planetaryBody3, orbitalPaths: orbitalPaths)
     container.mainContext.insert(orbitalSystem)
     
     return OrbitalSystemView(orbitalSystem: orbitalSystem)
