@@ -25,7 +25,7 @@ struct Planet: View {
         self.layer = layer
         self.color = Color(hex: color) ?? .red
         if layer == 0 { isSun = true }
-        self.ringRadius = CGFloat(37.5 + (Double(layer) / (2.0)) * 75.0)
+        self.ringRadius = CGFloat(50 + (Double(layer) / (2.0)) * 100.0)
         self.direction = Bool.random() ? 1 : -1
         self._selection = selection
     }

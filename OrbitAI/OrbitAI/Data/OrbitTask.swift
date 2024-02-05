@@ -29,7 +29,7 @@ class OrbitTask {
     
     // MARK: Randomly Created Task Planet
     init(layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
-        self.size = CGFloat.random(in: 20...40)
+        self.size = CGFloat.random(in: 30...50)
         self.layer = layer
         self.colorHex = colors.randomElement() ?? "FFFFFF"
         self.isSun = (layer == 0) ? true : false
@@ -44,7 +44,7 @@ class OrbitTask {
     // MARK: More Specific Task Planet
     init(image: String, layer: CGFloat, title: String, taskDescription: String, deadline: Date) {
         self.image = image
-        self.size = CGFloat.random(in: 20...40)
+        self.size = CGFloat.random(in: 30...50)
         self.layer = layer
         self.colorHex = "FFA500"
         self.isSun = (layer == 0) ? true : false

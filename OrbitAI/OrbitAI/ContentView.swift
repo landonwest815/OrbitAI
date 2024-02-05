@@ -28,6 +28,8 @@ struct ContentView: View {
     
     @State private var detailsTitle: String = ""
     @State private var detailsDescription: String = ""
+    
+    @State private var date = Date.now
 
     
     var body: some View {
@@ -54,7 +56,7 @@ struct ContentView: View {
                                     if !task.isSun {
                                         Circle()
                                             .stroke(style: StrokeStyle(lineWidth: 1))
-                                            .frame(width: 75 + (task.layer * 75), height: 75 + (task.layer * 75))
+                                            .frame(width: 100 + (task.layer * 100), height: 100 + (task.layer * 100))
                                             .opacity(((selectedLayer < 0 || selectedLayer == task.layer) && selectedLayer != 0) ? 0.7 : 0.2 )
                                             .animation(.easeInOut(duration: 0.33), value: selectedLayer)
                                     }
@@ -68,7 +70,7 @@ struct ContentView: View {
                             }
                             
                             // MARK: Sun
-                            Planet(image: "sun.min.fill", size: 75, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
+                            Planet(image: "sun.min.fill", size: 100, layer: 0, color: "FFFFFF",  selection: $selectedLayer)
                                 .opacity(selectedLayer < 1 ? 1.0 : 0.2 )
                                 .animation(.easeInOut(duration: 0.33), value: selectedLayer)
                                 .symbolEffect(.scale.byLayer.up, isActive: selectedLayer == 0)
@@ -194,6 +196,8 @@ struct ContentView: View {
                             ZStack {
                                 
                                 VStack {
+                                    
+                                
                                     Text(promptInstructions[promptStep]).fontDesign(.monospaced)
                                         .foregroundStyle(.orange)
                                         .font(.system(size: 25))
@@ -241,6 +245,7 @@ struct ContentView: View {
                                                 }
                                             }
                                     }
+                                    
                                 }
                             }
                         }

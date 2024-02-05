@@ -17,6 +17,13 @@
 		917794372B69842E000119AD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 917794362B69842E000119AD /* Assets.xcassets */; };
 		9177943A2B69842E000119AD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 917794392B69842E000119AD /* Preview Assets.xcassets */; };
 		917794422B6995C3000119AD /* Planet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917794412B6995C3000119AD /* Planet.swift */; };
+		91D458672B7188F90013068F /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D458662B7188F90013068F /* CalendarView.swift */; };
+		91D4586D2B719CE00013068F /* PlanetaryBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D4586C2B719CE00013068F /* PlanetaryBody.swift */; };
+		91D4586F2B719E0F0013068F /* OrbitalPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D4586E2B719E0F0013068F /* OrbitalPath.swift */; };
+		91D458722B719F4A0013068F /* OrbitalSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D458712B719F4A0013068F /* OrbitalSystem.swift */; };
+		91D458752B71A0020013068F /* PlanetaryBodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D458742B71A0020013068F /* PlanetaryBodyView.swift */; };
+		91D458772B71A2D40013068F /* OrbitalPathView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D458762B71A2D40013068F /* OrbitalPathView.swift */; };
+		91D458792B71A6F00013068F /* OrbitalSystemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91D458782B71A6F00013068F /* OrbitalSystemView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +39,13 @@
 		917794392B69842E000119AD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		9177943B2B69842E000119AD /* OrbitAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = OrbitAI.entitlements; sourceTree = "<group>"; };
 		917794412B6995C3000119AD /* Planet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Planet.swift; sourceTree = "<group>"; };
+		91D458662B7188F90013068F /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		91D4586C2B719CE00013068F /* PlanetaryBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryBody.swift; sourceTree = "<group>"; };
+		91D4586E2B719E0F0013068F /* OrbitalPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitalPath.swift; sourceTree = "<group>"; };
+		91D458712B719F4A0013068F /* OrbitalSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitalSystem.swift; sourceTree = "<group>"; };
+		91D458742B71A0020013068F /* PlanetaryBodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetaryBodyView.swift; sourceTree = "<group>"; };
+		91D458762B71A2D40013068F /* OrbitalPathView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitalPathView.swift; sourceTree = "<group>"; };
+		91D458782B71A6F00013068F /* OrbitalSystemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrbitalSystemView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,9 +86,11 @@
 				917794382B69842E000119AD /* Preview Content */,
 				917794412B6995C3000119AD /* Planet.swift */,
 				910DE9072B6AB04200DAAB39 /* TaskDetails.swift */,
-				910DE9092B6AB35600DAAB39 /* OrbitTask.swift */,
 				910DE90B2B6AB56800DAAB39 /* GalaxyData.swift */,
 				91611D892B6AEE3D0010AEAA /* ColorExtension.swift */,
+				91D458662B7188F90013068F /* CalendarView.swift */,
+				91D458702B719F120013068F /* Data */,
+				91D458732B719FEC0013068F /* Views */,
 			);
 			path = OrbitAI;
 			sourceTree = "<group>";
@@ -85,6 +101,27 @@
 				917794392B69842E000119AD /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		91D458702B719F120013068F /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				91D4586C2B719CE00013068F /* PlanetaryBody.swift */,
+				91D4586E2B719E0F0013068F /* OrbitalPath.swift */,
+				91D458712B719F4A0013068F /* OrbitalSystem.swift */,
+				910DE9092B6AB35600DAAB39 /* OrbitTask.swift */,
+			);
+			path = Data;
+			sourceTree = "<group>";
+		};
+		91D458732B719FEC0013068F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				91D458742B71A0020013068F /* PlanetaryBodyView.swift */,
+				91D458762B71A2D40013068F /* OrbitalPathView.swift */,
+				91D458782B71A6F00013068F /* OrbitalSystemView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -157,11 +194,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				91D458722B719F4A0013068F /* OrbitalSystem.swift in Sources */,
+				91D458772B71A2D40013068F /* OrbitalPathView.swift in Sources */,
+				91D458792B71A6F00013068F /* OrbitalSystemView.swift in Sources */,
 				910DE90C2B6AB56800DAAB39 /* GalaxyData.swift in Sources */,
 				917794332B69842C000119AD /* ContentView.swift in Sources */,
 				917794352B69842C000119AD /* Item.swift in Sources */,
 				91611D8A2B6AEE3D0010AEAA /* ColorExtension.swift in Sources */,
+				91D4586D2B719CE00013068F /* PlanetaryBody.swift in Sources */,
+				91D4586F2B719E0F0013068F /* OrbitalPath.swift in Sources */,
+				91D458752B71A0020013068F /* PlanetaryBodyView.swift in Sources */,
 				917794312B69842C000119AD /* OrbitAIApp.swift in Sources */,
+				91D458672B7188F90013068F /* CalendarView.swift in Sources */,
 				910DE90A2B6AB35600DAAB39 /* OrbitTask.swift in Sources */,
 				910DE9082B6AB04200DAAB39 /* TaskDetails.swift in Sources */,
 				917794422B6995C3000119AD /* Planet.swift in Sources */,

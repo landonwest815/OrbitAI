@@ -13,6 +13,9 @@ struct OrbitAIApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             OrbitTask.self,
+            PlanetaryBody.self,
+            OrbitalPath.self,
+            OrbitalSystem.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
