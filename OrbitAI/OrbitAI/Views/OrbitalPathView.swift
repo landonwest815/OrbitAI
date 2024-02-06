@@ -21,7 +21,7 @@ struct OrbitalPathView: View {
                         .stroke(style: StrokeStyle(lineWidth: 1))
                         .frame(width: 100 + CGFloat((orbitalPath.layer * 100)), height: 100 + CGFloat((orbitalPath.layer * 100)))
                     
-                    PlanetaryBodyView(planetaryBody: orbitalPath.planetaryBody)
+                    OrbitalSystemView(orbitalSystem: orbitalPath.planetaryBody)
                         .offset(x:orbitalPath.radius * cos(orbitalPath.angle), y: orbitalPath.radius * sin(orbitalPath.angle))
                         .onAppear {
                             Timer.scheduledTimer(withTimeInterval: 0.02, repeats: true) { timer in
@@ -48,6 +48,8 @@ struct OrbitalPathView: View {
     
     let orbitalPath = OrbitalPath(planetaryBody: planetaryBody, layer: 1)
     container.mainContext.insert(orbitalPath)
+    
+    planetaryBody.addOrbital(orbital: orbitalPath)
     
     return OrbitalPathView(orbitalPath: orbitalPath)
         .modelContainer(container)

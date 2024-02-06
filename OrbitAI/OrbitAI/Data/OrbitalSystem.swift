@@ -12,11 +12,11 @@ import SwiftData
 class OrbitalSystem {
     var center: PlanetaryBody
     var selectedLayer: Int
-    var orbitalPaths: [OrbitalPath]?
+    var orbitals: [OrbitalSystem]?
     
-    init(center: PlanetaryBody, orbitalPaths: [OrbitalPath]? = nil) {
+    init(center: PlanetaryBody, orbitals: [OrbitalSystem]? = nil) {
         self.center = center
         self.selectedLayer = 0
-        self.orbitalPaths = orbitalPaths
+        self.orbitals = orbitals
     }
 }
