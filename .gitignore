@@ -90,3 +90,5 @@ fastlane/test_output
 iOSInjectionProject/
 OrbitAI/.DS_Store
 OrbitAI/.DS_Store
+.DS_Store
+Assets/.DS_Store
